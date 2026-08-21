@@ -1,0 +1,44 @@
+import java.util.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        Deque<Integer> deque = new ArrayDeque<>();
+        Set<Integer> set = new HashSet<>();
+
+        int n = in.nextInt();
+        int m = in.nextInt();
+        int maxUnique = 0;
+
+        for (int i = 0; i < n; i++) {
+            int num = in.nextInt();
+
+            // Add new element to deque and set
+            deque.addLast(num);
+            set.add(num);
+
+            // Once the window reaches size m
+            if (deque.size() == m) {
+                // Update maximum unique elements count
+                if (set.size() > maxUnique) {
+                    maxUnique = set.size();
+                }
+
+                // Optimization: maximum possible unique elements in window of size m is m
+                if (maxUnique == m) {
+                    break;
+                }
+
+                // Slide the window: remove the head element
+                int removed = deque.removeFirst();
+                // Remove from set ONLY if it doesn't appear again in the current deque window
+                if (!deque.contains(removed)) {
+                    set.remove(removed);
+                }
+            }
+        }
+
+        System.out.println(maxUnique);
+        in.close();
+    }
+}
