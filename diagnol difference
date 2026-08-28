@@ -1,0 +1,58 @@
+import java.io.*;
+import java.util.*;
+
+class Result {
+
+    public static int diagonalDifference(List<List<Integer>> arr) {
+        int n = arr.size();
+
+        int leftDiagonal = 0;
+        int rightDiagonal = 0;
+
+        for (int i = 0; i < n; i++) {
+            // Primary diagonal
+            leftDiagonal += arr.get(i).get(i);
+
+            // Secondary diagonal
+            rightDiagonal += arr.get(i).get(n - 1 - i);
+        }
+
+        return Math.abs(leftDiagonal - rightDiagonal);
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(
+            new InputStreamReader(System.in)
+        );
+
+        BufferedWriter bufferedWriter = new BufferedWriter(
+            new FileWriter(System.getenv("OUTPUT_PATH"))
+        );
+
+        int n = Integer.parseInt(bufferedReader.readLine().trim());
+
+        List<List<Integer>> arr = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            String[] row = bufferedReader.readLine().trim().split(" ");
+
+            List<Integer> currentRow = new ArrayList<>();
+
+            for (String value : row) {
+                currentRow.add(Integer.parseInt(value));
+            }
+
+            arr.add(currentRow);
+        }
+
+        int result = Result.diagonalDifference(arr);
+
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.newLine();
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
