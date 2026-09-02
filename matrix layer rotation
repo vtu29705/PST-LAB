@@ -1,0 +1,94 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+
+    public static void matrixRotation(List<List<Integer>> matrix, int r) {
+        int m = matrix.size();
+        int n = matrix.get(0).size();
+        int numLayers = Math.min(m, n) / 2;
+
+        for (int layer = 0; layer < numLayers; layer++) {
+            List<Integer> layerElements = new ArrayList<>();
+
+            int rMin = layer, rMax = m - 1 - layer;
+            int cMin = layer, cMax = n - 1 - layer;
+
+            // 1. Extract layer elements in anti-clockwise order:
+            // Down left column
+            for (int row = rMin; row <= rMax; row++) {
+                layerElements.add(matrix.get(row).get(cMin));
+            }
+            // Right along bottom row
+            for (int col = cMin + 1; col <= cMax; col++) {
+                layerElements.add(matrix.get(rMax).get(col));
+            }
+            // Up right column
+            for (int row = rMax - 1; row >= rMin; row--) {
+                layerElements.add(matrix.get(row).get(cMax));
+            }
+            // Left along top row
+            for (int col = cMax - 1; col > cMin; col--) {
+                layerElements.add(matrix.get(rMin).get(col));
+            }
+
+            int totalLen = layerElements.size();
+            int effR = r % totalLen;
+
+            // 2. Write back starting from offset `effR` (Anti-clockwise rotation)
+            int idx = effR;
+
+            // Down left column
+            for (int row = rMin; row <= rMax; row++) {
+                matrix.get(row).set(cMin, layerElements.get(idx));
+                idx = (idx + 1) % totalLen;
+            }
+            // Right along bottom row
+            for (int col = cMin + 1; col <= cMax; col++) {
+                matrix.get(rMax).set(col, layerElements.get(idx));
+                idx = (idx + 1) % totalLen;
+            }
+            // Up right column
+            for (int row = rMax - 1; row >= rMin; row--) {
+                matrix.get(row).set(cMax, layerElements.get(idx));
+                idx = (idx + 1) % totalLen;
+            }
+            // Left along top row
+            for (int col = cMax - 1; col > cMin; col--) {
+                matrix.get(rMin).set(col, layerElements.get(idx));
+                idx = (idx + 1) % totalLen;
+            }
+        }
+
+        // Fast printing output
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                sb.append(matrix.get(i).get(j)).append(j == n - 1 ? "" : " ");
+            }
+            sb.append("\n");
+        }
+        System.out.print(sb);
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int m = Integer.parseInt(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
+        int r = Integer.parseInt(st.nextToken());
+
+        List<List<Integer>> matrix = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            List<Integer> row = new ArrayList<>();
+            for (int j = 0; j < n; j++) {
+                row.add(Integer.parseInt(st.nextToken()));
+            }
+            matrix.add(row);
+        }
+
+        matrixRotation(matrix, r);
+    }
+}
